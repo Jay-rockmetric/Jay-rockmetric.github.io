@@ -54,10 +54,8 @@ $app->get('/student/{student_id}', function (Request $request, Response $respons
 
 $app->post('/student/add', function (Request $request, Response $response) {
     $contents = json_decode(file_get_contents('php://input'), true);
-    if (json_last_error() === JSON_ERROR_NONE) {
-        $data = $request->withParsedBody($contents);
-        $data = $data->getParsedBody();
-    }
+    $data = $request->withParsedBody($contents);
+    $data = $data->getParsedBody();
     $first_name = $data['first_name'];
     $last_name = $data['last_name'];
     $email_id = $data['email_id'];
