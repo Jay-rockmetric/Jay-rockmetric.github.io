@@ -2,6 +2,7 @@
 
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\StreamInterface;
 use Slim\Factory\AppFactory;
 
 
@@ -16,7 +17,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
 
 $app->get('/student', function (Request $request, Response $response) {
 
-    $sql = "SELECT * FROM  student";
+    $sql = "SELECT * FROM  student WHERE is_deleted != 1";
     try {
         $db = new db();
         $pdo = $db->connect();
@@ -55,12 +56,15 @@ $app->get('/student/{student_id}', function (Request $request, Response $respons
 
 
 $app->post('/student/add', function (Request $request, Response $response, array $args) {
-    $first_name = $request->getQueryParams()["first_name"];
-    $last_name = $request->getQueryParams()["last_name"];
-    $email_id = $request->getQueryParams()["email_id"];
-    $contact_no = $request->getQueryParams()["contact_no"];
-    $city = $request->getQueryParams()["city"];
-    $state = $request->getQueryParams()["state"];
+    
+    $data = $request->getParsedBody();
+    var_dump($data);
+    $first_name = $data['first_name'];
+    $last_name = $data["last_name"];
+    $email_id = $data["email_id"];
+    $contact_no = $data["contact_no"];
+    $city = $data["city"];
+    $state = $data["state"];
 
     try {
         $db = new db();
@@ -78,7 +82,7 @@ $app->post('/student/add', function (Request $request, Response $response, array
 
 
 
-$app->put('/student/update/{student_id}', function (Request $request, Response $response, array $args) {
+$app->post('/student/update/{student_id}', function (Request $request, Response $response, array $args) {
     $student_id = $request->getAttribute('student_id');
 
     $first_name = $request->getQueryParams()["first_name"];
@@ -100,13 +104,13 @@ $app->put('/student/update/{student_id}', function (Request $request, Response $
 });
 
 
-$app->delete('/student/delete/{student_id}', function (Request $request, Response $response, array $args) {
+$app->post('/student/delete/{student_id}', function (Request $request, Response $response, array $args) {
     $student_id = $request->getAttribute('student_id');
 
     try {
         $db = new db();
         $pdo = $db->connect();
-        $sql = "DELETE FROM student WHERE student_id=?";
+        $sql = "UPDATE student SET is_deleted = 1 WHERE student_id=?";
         $pdo->prepare($sql)->execute([$student_id]);
         $response->getBody()->write("User : ". $student_id ." Deleted Successfully");
         $pdo = null;
@@ -117,7 +121,3 @@ $app->delete('/student/delete/{student_id}', function (Request $request, Respons
         return $response;
     }
 });
- 
-
-
-$app->run();
