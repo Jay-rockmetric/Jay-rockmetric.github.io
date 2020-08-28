@@ -1,11 +1,13 @@
 <?php
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__.'/../public/config/db.php';
-$app = AppFactory::create();
+
+$app = new \Slim\App;
+
+$app->addErrorMiddleware(true,true,true);
 
 $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Hello Jay!");
@@ -18,11 +20,10 @@ $app->get('/student', function (Request $request, Response $response) {
 
     $sql = "SELECT * FROM  student WHERE is_deleted != 1";
     try {
-        $pdo = connect();
         $stmt = $pdo->query($sql);
         $student = $stmt->fetchAll(PDO::FETCH_OBJ);
         $pdo = null;
-        $response->getBody()->write("Data is : ". json_encode($student, JSON_PRETTY_PRINT));
+        $response->getBody()->write(json_encode($student, JSON_PRETTY_PRINT));
         return $response;
     } catch (\PDOException $e) {
         $response->getBody()->write($e->getMessage());
@@ -53,9 +54,9 @@ $app->get('/student/{student_id}', function (Request $request, Response $respons
 
 
 $app->post('/student/add', function (Request $request, Response $response) {
-    $contents = json_decode(file_get_contents('php://input'), true);
-    $data = $request->withParsedBody($contents);
-    $data = $data->getParsedBody();
+    // $contents = json_decode(file_get_contents('php://input'), true);
+    // $data = $request->withParsedBody($contents);
+    $data = $request->getParsedBody();
     $first_name = $data['first_name'];
     $last_name = $data['last_name'];
     $email_id = $data['email_id'];
@@ -80,11 +81,7 @@ $app->post('/student/add', function (Request $request, Response $response) {
 
 $app->post('/student/update/{student_id}', function (Request $request, Response $response) {
     $student_id = $request->getAttribute('student_id');
-    $contents = json_decode(file_get_contents('php://input'), true);
-    if (json_last_error() === JSON_ERROR_NONE) {
-        $data = $request->withParsedBody($contents);
-        $data = $data->getParsedBody();
-    }
+    $data = $request->getParsedBody();
     $first_name = $data['first_name'];
     $last_name = $data['last_name'];
     $contact_no = $data['contact_no'];

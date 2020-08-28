@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit3430ce49856401a97e20754904b298cc
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -68,11 +68,22 @@ class ComposerStaticInit3430ce49856401a97e20754904b298cc
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'Pimple' => 
+            array (
+                0 => __DIR__ . '/..' . '/pimple/pimple/src',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3430ce49856401a97e20754904b298cc::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3430ce49856401a97e20754904b298cc::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3430ce49856401a97e20754904b298cc::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }
