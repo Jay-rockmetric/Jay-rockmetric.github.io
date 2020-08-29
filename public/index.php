@@ -2,6 +2,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__.'/../config/setting.php';
 
@@ -13,12 +14,17 @@ $app = new \Slim\App(['settings' => $config]);
 
 require __DIR__.'/../config/container.php';
 
+
+
 $app->get('/', function (Request $request, Response $response) {
+    $this->sftp->chdir('uploads');
+    echo $this->sftp->pwd();
     $response->getBody()->write("Hello Jay!");
     return $response;
 });
 
 $app->get('/student', function (Request $request, Response $response) {
+    
     $api = new Api();
     $data = $api->getAllStudents($this->db);
     return $response->withHeader("Content-Type", 'application/json')->withJson($data);
