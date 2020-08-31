@@ -5,7 +5,8 @@ class Api{
         try {
             $stmt = $db->query($sql);
             $data = $stmt->fetchAll(PDO::FETCH_OBJ);
-            return $data;
+            $msg = array('statusCode' => 200 , 'statusInformation' => 'Student Information', 'data' => $data);
+            return $msg;
         } catch (\PDOException $e) {
             $data = $e->getMessage();
             return $data;
@@ -17,6 +18,7 @@ class Api{
         try {
             $stmt = $db->query($sql);
             $data = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $msg = array('statusCode' => 200 , 'statusInformation' => 'Student Information');
             return $data;
         } catch (\PDOException $e) {
             $data = $e->getMessage();
@@ -34,7 +36,7 @@ class Api{
         try {
             $sql = "INSERT INTO student (first_name, last_name, email_id, contact_no, city, state) VALUES (?,?,?,?,?,?)";
             $db->prepare($sql)->execute([$first_name, $last_name, $email_id, $contact_no, $city, $state]);
-            $msg = "New Student Added Successfully";
+            $msg = array('statusCode' => 200 , 'statusInformation' => 'New Student added successfully');
             return $msg;
         } catch (\PDOException $e) {
             $msg = $e->getMessage();
@@ -49,7 +51,7 @@ class Api{
         try {
             $sql = "UPDATE student SET first_name =?, last_name=?, contact_no=? WHERE student_id=?";
             $db->prepare($sql)->execute([$first_name, $last_name, $contact_no, $student_id]);
-            $msg = "Student Updated Successfully";
+            $msg = array('statusCode' => 200 , 'statusInformation' => 'Student Updated successfully');
             return $msg;
         } catch (\PDOException $e) {
             $msg = $e->getMessage();
@@ -61,7 +63,7 @@ class Api{
         try {
             $sql = "UPDATE student SET is_deleted = 1 WHERE student_id=?";
             $db->prepare($sql)->execute([$student_id]);
-            $msg = "Student Deleted Successfully";
+            $msg = array('statusCode' => 200 , 'statusInformation' => 'Student Deleted successfully');
             return $msg;
         } catch (\PDOException $e) {
             $msg = $e->getMessage();
